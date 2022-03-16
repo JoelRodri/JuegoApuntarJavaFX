@@ -15,10 +15,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-public class JuegoAleatorio extends Application {
+public class JuegoSpider extends Application {
 
     boolean mostrarBonus = false;
     int bonusActual;
+    int contador = 0;
 
     public void start(Stage theStage) {
         theStage.setTitle( "Click the Target!" );
@@ -29,68 +30,36 @@ public class JuegoAleatorio extends Application {
 
         Canvas canvas = new Canvas( 1280, 720 );
 
+
         root.getChildren().add( canvas );
 
         Circle targetData = new Circle(640,360,30);
-        Circle targetData2 = new Circle(640,360,30);
-        Circle targetData3 = new Circle(640,360,30);
 
         IntValue points = new IntValue();
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
+        final double[] x = new double[1];
+        final double[] y = new double[1];
 
         theScene.setOnMouseClicked(
                 new EventHandler<MouseEvent>(){
                     public void handle(MouseEvent e) {
                         if (targetData.contains(e.getX(), e.getY())) {
-                            double x = 50 + 1000 * Math.random();
-                            double y = 50 + 500 * Math.random();
-                            targetData.setCenterX(x);
-                            targetData.setCenterY(y);
-
-                            if (points.getBonusRacha() >= 0 && points.getBonusRacha() < 3) {
-                                points.sumaPunto(1);
-                                points.sumaBonus(1);
-                            } else if (points.getBonusRacha() >= 3 && points.getBonusRacha() < 8) {
-                                points.sumaPunto(2);
-                                points.sumaBonus(1);
-                                mostrarBonus = true;
-                                bonusActual = 2;
-                            } else if (points.getBonusRacha() >= 8) {
-                                points.sumaPunto(3);
-                                bonusActual = 3;
+                            if (contador%2 == 0){
+                                x[0] = 640;
+                                y[0] = 360;
+                            }else{
+                                x[0] = 50 + 1000 * Math.random();
+                                y[0] = 50 + 500 * Math.random();
                             }
 
-                        }else if (targetData2.contains(e.getX(), e.getY())) {
-                            double x = 50 + 1000 * Math.random();
-                            double y = 50 + 500 * Math.random();
-                            targetData2.setCenterX(x);
-                            targetData2.setCenterY(y);
+                            targetData.setCenterX(x[0]);
+                            targetData.setCenterY(y[0]);
 
                             if (points.getBonusRacha() >= 0 && points.getBonusRacha() < 3) {
                                 points.sumaPunto(1);
                                 points.sumaBonus(1);
-                            } else if (points.getBonusRacha() >= 3 && points.getBonusRacha() < 8) {
-                                points.sumaPunto(2);
-                                points.sumaBonus(1);
-                                mostrarBonus = true;
-                                bonusActual = 2;
-                            } else if (points.getBonusRacha() >= 8) {
-                                points.sumaPunto(3);
-                                bonusActual = 3;
-                            }
-
-                        }else if (targetData3.contains(e.getX(), e.getY())) {
-                            double x = 50 + 1000 * Math.random();
-                            double y = 50 + 500 * Math.random();
-                            targetData3.setCenterX(x);
-                            targetData3.setCenterY(y);
-
-                            if (points.getBonusRacha() >= 0 && points.getBonusRacha() < 3) {
-                                points.sumaPunto(1);
-                                points.sumaBonus(1);
-                                bonusActual = 1;
                             } else if (points.getBonusRacha() >= 3 && points.getBonusRacha() < 8) {
                                 points.sumaPunto(2);
                                 points.sumaBonus(1);
@@ -125,17 +94,15 @@ public class JuegoAleatorio extends Application {
             {
                 // Clear the canvas
                 gc.drawImage(fondo,0,0);
+
+                /*gc.setFill( new Color(0.85, 0.85, 1.0, 1.0) );*/
+                /*gc.fillRect(0,0, 1280,720);*/
+
+
+                /*gc.setFill( Color.RED );*/
                 gc.drawImage( pelota,
                         targetData.getCenterX() - targetData.getRadius(),
                         targetData.getCenterY() - targetData.getRadius() );
-                gc.drawImage( pelota,
-                        targetData2.getCenterX() - targetData2.getRadius(),
-                        targetData2.getCenterY() - targetData2.getRadius() );
-                gc.drawImage( pelota,
-                        targetData3.getCenterX() - targetData3.getRadius(),
-                        targetData3.getCenterY() - targetData3.getRadius() );
-
-                /*gc.setFill( Color.RED );*/
 
                 String pointsText = "Points: " + points.puntos;
                 String bonusRacha = "BONUS POR RACHA!";
