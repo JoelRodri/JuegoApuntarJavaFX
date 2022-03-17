@@ -69,7 +69,7 @@ public class JuegoSpider extends Application {
                                 points.sumaPunto(3);
                                 bonusActual = 3;
                             }
-
+                            contador++;
                         }else {
                             points.restaPunto(bonusActual);
                             points.reseteaBonus();

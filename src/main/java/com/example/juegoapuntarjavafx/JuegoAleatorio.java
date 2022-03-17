@@ -32,8 +32,8 @@ public class JuegoAleatorio extends Application {
         root.getChildren().add( canvas );
 
         Circle targetData = new Circle(640,360,30);
-        Circle targetData2 = new Circle(640,360,30);
-        Circle targetData3 = new Circle(640,360,30);
+        Circle targetData2 = new Circle(50 + 1000 * Math.random(),50 + 500 * Math.random(),30);
+        Circle targetData3 = new Circle(50 + 1000 * Math.random(),50 + 500 * Math.random(),30);
 
         IntValue points = new IntValue();
 
