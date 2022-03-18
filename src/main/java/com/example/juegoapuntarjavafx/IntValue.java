@@ -3,6 +3,7 @@ package com.example.juegoapuntarjavafx;
 public class IntValue {
     public int puntos = 0;
     public int bonusRacha = 0;
+    public boolean jugado = false;
 
     public void sumaPunto(int i){
         puntos += i;

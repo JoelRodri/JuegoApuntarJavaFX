@@ -1,6 +1,8 @@
 package com.example.juegoapuntarjavafx;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -14,11 +16,15 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
-public class JuegoAleatorio extends Application {
+public class JuegoAleatorio{
 
     boolean mostrarBonus = false;
     int bonusActual;
+    double refresh = 20;//ms
+    double addBallDuration = 10000;//ms
+    double temp = 0;
 
     public void start(Stage theStage) {
         theStage.setTitle( "Click the Target!" );
@@ -36,6 +42,10 @@ public class JuegoAleatorio extends Application {
         Circle targetData3 = new Circle(50 + 1000 * Math.random(),50 + 500 * Math.random(),30);
 
         IntValue points = new IntValue();
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(refresh), e->moveBalls(theStage)));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
@@ -141,8 +151,24 @@ public class JuegoAleatorio extends Application {
                 String bonusRacha = "BONUS POR RACHA!";
                 String bonusText = "+" + bonusActual + " Por hacierto!";
 
-                gc.fillText( pointsText, 1100, 36 );
-                gc.strokeText( pointsText, 1100, 36 );
+                int segundos = 10;
+
+                if (temp >= 1000){segundos = 9;}
+                if (temp >= 2000){segundos = 8;}
+                if (temp >= 3000){segundos = 7;}
+                if (temp >= 4000){segundos = 6;}
+                if (temp >= 5000){segundos = 5;}
+                if (temp >= 6000){segundos = 4;}
+                if (temp >= 7000){segundos = 3;}
+                if (temp >= 8000){segundos = 2;}
+                if (temp >= 9000){segundos = 1;}
+                if (temp >= 10000){segundos = 0;}
+
+
+                String tiempo ="Tiempo" + segundos;
+                gc.fillText(tiempo,50,50);
+                gc.fillText( pointsText, 1050, 36 );
+                gc.strokeText( pointsText, 1050, 36 );
 
                 if (mostrarBonus){gc.fillText(bonusRacha,950,100);gc.fillText(bonusText,1000,130);}
 
@@ -152,5 +178,11 @@ public class JuegoAleatorio extends Application {
         theStage.show();
     }
 
-
+    private void moveBalls(Stage stage) {
+        temp = temp + refresh;
+        if (temp > addBallDuration) {
+            temp = 0;
+            stage.hide();
+        }
+    }
 }

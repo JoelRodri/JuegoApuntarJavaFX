@@ -1,6 +1,8 @@
 package com.example.juegoapuntarjavafx;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -14,15 +16,23 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
-public class JuegoSpider extends Application {
+public class JuegoSpider{
 
     boolean mostrarBonus = false;
     int bonusActual;
     int contador = 0;
+    double refresh = 20;//ms
+    double addBallDuration = 10000;//ms
+    double temp = 0;
+    Menu menu = new Menu();
 
     public void start(Stage theStage) {
+
         theStage.setTitle( "Click the Target!" );
+
+
 
         Group root = new Group();
         Scene theScene = new Scene( root );
@@ -36,6 +46,10 @@ public class JuegoSpider extends Application {
         Circle targetData = new Circle(640,360,30);
 
         IntValue points = new IntValue();
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(refresh), e->moveBalls(theStage)));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
@@ -88,8 +102,7 @@ public class JuegoSpider extends Application {
         Image pelota = new Image( "bullseye.png" );
         Image fondo = new Image("background.png");
 
-        new AnimationTimer()
-        {
+        new AnimationTimer() {
             public void handle(long currentNanoTime)
             {
                 // Clear the canvas
@@ -107,11 +120,13 @@ public class JuegoSpider extends Application {
                 String pointsText = "Points: " + points.puntos;
                 String bonusRacha = "BONUS POR RACHA!";
                 String bonusText = "+" + bonusActual + " Por hacierto!";
-
+                String tiempo ="Tiempo" + temp;
+                gc.fillText(tiempo,0,0);
                 gc.fillText( pointsText, 1100, 36 );
                 gc.strokeText( pointsText, 1100, 36 );
 
-                if (mostrarBonus){gc.fillText(bonusRacha,950,100);gc.fillText(bonusText,1000,130);}
+
+                if (mostrarBonus){gc.fillText(bonusRacha,800,100);gc.fillText(bonusText,950,130);}
 
             }
         }.start();
@@ -119,5 +134,12 @@ public class JuegoSpider extends Application {
         theStage.show();
     }
 
+    private void moveBalls(Stage stage) {
+        temp = temp + refresh;
+        if (temp > addBallDuration) {
+            temp = 0;
+            stage.hide();
+        }
+    }
 
 }
