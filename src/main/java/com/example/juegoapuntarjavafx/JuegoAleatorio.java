@@ -26,9 +26,10 @@ public class JuegoAleatorio{
     double addBallDuration = 10000;//ms
     double temp = 0;
 
-    public void start(Stage theStage) {
+    public void start(Stage theStage, IntValue points) {
         theStage.setTitle( "Click the Target!" );
 
+        points.reseteaPuntos();
         Group root = new Group();
         Scene theScene = new Scene( root );
         theStage.setScene( theScene );
@@ -41,9 +42,9 @@ public class JuegoAleatorio{
         Circle targetData2 = new Circle(50 + 1000 * Math.random(),50 + 500 * Math.random(),30);
         Circle targetData3 = new Circle(50 + 1000 * Math.random(),50 + 500 * Math.random(),30);
 
-        IntValue points = new IntValue();
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(refresh), e->moveBalls(theStage)));
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(refresh), e->moveBalls(theStage,points)));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 
@@ -117,6 +118,7 @@ public class JuegoAleatorio{
                             bonusActual = 1;
                             mostrarBonus = false;
                         }
+                        points.cambiarJugado();
                     }
                 });
 
@@ -145,14 +147,15 @@ public class JuegoAleatorio{
                         targetData3.getCenterX() - targetData3.getRadius(),
                         targetData3.getCenterY() - targetData3.getRadius() );
 
-                /*gc.setFill( Color.RED );*/
 
+                gc.setFill( Color.RED );
                 String pointsText = "Points: " + points.puntos;
-                String bonusRacha = "BONUS POR RACHA!";
-                String bonusText = "+" + bonusActual + " Por hacierto!";
+                String bonusRacha = "¡BONUS POR RACHA!";
+                String bonusText = "¡+" + bonusActual + " Por acierto!";
 
                 int segundos = 10;
 
+                if (temp >= 0){segundos=0;}
                 if (temp >= 1000){segundos = 9;}
                 if (temp >= 2000){segundos = 8;}
                 if (temp >= 3000){segundos = 7;}
@@ -166,6 +169,7 @@ public class JuegoAleatorio{
 
 
                 String tiempo ="Tiempo" + segundos;
+                gc.setFill(Color.RED);
                 gc.fillText(tiempo,50,50);
                 gc.fillText( pointsText, 1050, 36 );
                 gc.strokeText( pointsText, 1050, 36 );
@@ -178,10 +182,13 @@ public class JuegoAleatorio{
         theStage.show();
     }
 
-    private void moveBalls(Stage stage) {
+    private void moveBalls(Stage stage, IntValue points) {
         temp = temp + refresh;
+        points.cambiarJugado();
         if (temp > addBallDuration) {
             temp = 0;
+            points.setRecord();
+            points.reseteaBonus();
             stage.hide();
         }
     }

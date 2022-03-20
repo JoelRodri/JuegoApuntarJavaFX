@@ -4,6 +4,7 @@ public class IntValue {
     public int puntos = 0;
     public int bonusRacha = 0;
     public boolean jugado = false;
+    public int record;
 
     public void sumaPunto(int i){
         puntos += i;
@@ -27,5 +28,17 @@ public class IntValue {
 
     public int getBonusRacha() {
         return bonusRacha;
+    }
+
+    public void cambiarJugado(){
+        if (jugado == true){
+            jugado = false;
+        }else{
+            jugado = true;
+        }
+    }
+
+    public void setRecord(){
+        if (puntos > record){record = puntos;}
     }
 }

@@ -26,14 +26,12 @@ public class JuegoSpider{
     double refresh = 20;//ms
     double addBallDuration = 10000;//ms
     double temp = 0;
-    Menu menu = new Menu();
 
-    public void start(Stage theStage) {
+    public void start(Stage theStage, IntValue points) {
 
         theStage.setTitle( "Click the Target!" );
 
-
-
+        points.reseteaPuntos();
         Group root = new Group();
         Scene theScene = new Scene( root );
         theStage.setScene( theScene );
@@ -45,9 +43,7 @@ public class JuegoSpider{
 
         Circle targetData = new Circle(640,360,30);
 
-        IntValue points = new IntValue();
-
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(refresh), e->moveBalls(theStage)));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(refresh), e->moveBalls(theStage,points)));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 
@@ -90,6 +86,7 @@ public class JuegoSpider{
                             bonusActual = 1;
                             mostrarBonus = false;
                         }
+                        points.jugado = true;
                     }
                 });
 
@@ -112,7 +109,7 @@ public class JuegoSpider{
                 /*gc.fillRect(0,0, 1280,720);*/
 
 
-                /*gc.setFill( Color.RED );*/
+                gc.setFill( Color.RED );
                 gc.drawImage( pelota,
                         targetData.getCenterX() - targetData.getRadius(),
                         targetData.getCenterY() - targetData.getRadius() );
@@ -120,24 +117,47 @@ public class JuegoSpider{
                 String pointsText = "Points: " + points.puntos;
                 String bonusRacha = "BONUS POR RACHA!";
                 String bonusText = "+" + bonusActual + " Por hacierto!";
-                String tiempo ="Tiempo" + temp;
-                gc.fillText(tiempo,0,0);
+
+                int segundos = 10;
+
+                if (temp >= 0){segundos=0;}
+                if (temp >= 1000){segundos = 9;}
+                if (temp >= 2000){segundos = 8;}
+                if (temp >= 3000){segundos = 7;}
+                if (temp >= 4000){segundos = 6;}
+                if (temp >= 5000){segundos = 5;}
+                if (temp >= 6000){segundos = 4;}
+                if (temp >= 7000){segundos = 3;}
+                if (temp >= 8000){segundos = 2;}
+                if (temp >= 9000){segundos = 1;}
+                if (temp >= 10000){segundos = 0;}
+
+                String tiempo ="Tiempo" + segundos;
+
+                gc.fillText(tiempo,50,50);
                 gc.fillText( pointsText, 1100, 36 );
                 gc.strokeText( pointsText, 1100, 36 );
 
 
-                if (mostrarBonus){gc.fillText(bonusRacha,800,100);gc.fillText(bonusText,950,130);}
-
+                if (mostrarBonus){gc.fillText(bonusRacha,950,100);gc.fillText(bonusText,1000,130);}
+                gc.setFill(Color.RED);
+                gc.setFont( theFont );
+                gc.setStroke( Color.BLACK );
+                gc.setLineWidth(1);
             }
         }.start();
 
         theStage.show();
     }
 
-    private void moveBalls(Stage stage) {
+    private void moveBalls(Stage stage, IntValue points) {
         temp = temp + refresh;
+        points.cambiarJugado();
+
         if (temp > addBallDuration) {
             temp = 0;
+            points.setRecord();
+            points.reseteaBonus();
             stage.hide();
         }
     }
